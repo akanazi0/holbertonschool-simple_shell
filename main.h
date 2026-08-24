@@ -8,8 +8,13 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+
+extern char **environ;
+
+
 void print_prompt(void);
 char *get_line_from_user(void);
+
 
 
 #endif 

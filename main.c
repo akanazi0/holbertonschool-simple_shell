@@ -62,10 +62,8 @@ line = get_line_from_user();
 
 /*EOF (ctrl + D) or error*/
 if (line == NULL)
-{
-if (isatty(STDIN_FILENO))
 break;
-}
+
 
 if (line[0] == '\0')
 {
@@ -87,9 +85,9 @@ exit(EXIT_FAILURE);
 
 if (pid == 0)
 {
-if (execve(args[0], args, NULL) == -1)
+if (execve(args[0], args, environ) == -1)
 {
-printf("./shell: No such file or directory\n");
+fprintf(stderr, "./shell: No such file or directory\n");
 free(line);
 exit(1);
 }
