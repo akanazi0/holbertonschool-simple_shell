@@ -90,7 +90,7 @@ if (pid == 0)
 {
 if (execve(args[0], args, environ) == -1)
 {
-fprintf(stderr, "./shell: No such file or directory\n");
+fprintf(stderr, "./hsh: No such file or directory\n");
 free(line);
 exit(1);
 }
