@@ -61,14 +61,14 @@ print_prompt();
 /*read line from the user*/
 line = get_line_from_user();
 
-command = strtok(line, " \t\r\n");
 
 /*EOF (ctrl + D) or error*/
 if (line == NULL)
 break;
 
+command = strtok(line, " \t\r\n");
 
-if (line[0] == '\0')
+if (command == '\0')
 {
 free(line);
 continue;
