@@ -68,7 +68,7 @@ break;
 
 command = strtok(line, " \t\r\n");
 
-if (command == '\0')
+if (command == NULL)
 {
 free(line);
 continue;
