@@ -9,7 +9,7 @@ void print_prompt(void)
 {
 if (isatty(STDIN_FILENO))
 {
-printf("$ ");
+printf("#cisfun$ ");
 fflush(stdout);
 }
 }
@@ -64,7 +64,6 @@ line = get_line_from_user();
 if (line == NULL)
 {
 if (isatty(STDIN_FILENO))
-printf("\n");
 break;
 }
 
@@ -90,12 +89,11 @@ if (pid == 0)
 {
 if (execve(args[0], args, NULL) == -1)
 {
-perror("./hsh");
+printf("./shell: No such file or directory\n");
 free(line);
-exit(EXIT_FAILURE);
+exit(1);
 }
 }
-
 else
 {
 wait(&status);
