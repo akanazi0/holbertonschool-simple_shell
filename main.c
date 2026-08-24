@@ -48,10 +48,11 @@ return (line);
 int main(void)
 {
 char *line;
-char *args[2];
+char *args[64];
 pid_t pid;
 int status;
-char *command;
+char *token;
+int i;
 
 while (1)
 {
@@ -66,16 +67,22 @@ line = get_line_from_user();
 if (line == NULL)
 break;
 
-command = strtok(line, " \t\r\n");
+i = 0;
+token = strtok(line, " \t\r\n");
+while (token != NULL && i < 63)
+{
+args[i] = token;
+token = strtok(line, " \t\r\n");
+i++;
+}
 
-if (command == NULL)
+args [i] = NULL;
+
+if (args[0] == NULL)
 {
 free(line);
 continue;
 }
-
-args[0] = command;
-args [1] = NULL;
 
 pid = fork();
 
