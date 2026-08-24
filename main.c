@@ -51,6 +51,7 @@ char *line;
 char *args[2];
 pid_t pid;
 int status;
+char *command;
 
 while (1)
 {
@@ -59,6 +60,8 @@ print_prompt();
 
 /*read line from the user*/
 line = get_line_from_user();
+
+command = strtok(line, " \t\r\n");
 
 /*EOF (ctrl + D) or error*/
 if (line == NULL)
@@ -71,7 +74,7 @@ free(line);
 continue;
 }
 
-args[0] = line;
+args[0] = command;
 args [1] = NULL;
 
 pid = fork();
