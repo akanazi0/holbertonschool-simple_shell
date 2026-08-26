@@ -11,9 +11,10 @@
 
 extern char **environ;
 
-
+void print(const char *s);
 void print_prompt(void);
-char *get_line_from_user(void);
+void get_line_from_user(char *cmd, size_t size);
+void exec_cmd(const char *cmd);
 
 
 

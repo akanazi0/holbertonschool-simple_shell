@@ -1,5 +1,17 @@
 #include "main.h"
 
+
+/**
+ * print - function print
+ * @s: string to be printed
+ * Return: void
+ */
+void print(const char *s)
+{
+write(STDOUT_FILENO, s, strlen(s));
+}
+
+
 /**
  * print_prompt - function prints $
  * 
@@ -7,11 +19,7 @@
  */
 void print_prompt(void)
 {
-if (isatty(STDIN_FILENO))
-{
-printf("#cisfun$ ");
-fflush(stdout);
-}
+print("#cisfun$ ");
 }
 
 /**
@@ -19,25 +27,47 @@ fflush(stdout);
  * 
  * Return: pointer, or NULL on EOF/error
  */
-char *get_line_from_user(void)
+void get_line_from_user(char *cmd, size_t size)
 {
-char *line = NULL;
-size_t len = 0;
-ssize_t read_bytes;
-
-read_bytes = getline(&line, &len, stdin);
-
-if (read_bytes == -1)
+if (fgets(cmd, size, stdin) == NULL)
 {
-free(line);
-return (NULL);
+if (feof(stdin)){
+print("\n");
+exit(EXIT_SUCCESS);
+} else {
+print("Error while reading input \n");
+exit(EXIT_FAILURE);
+}
+}
+cmd[strcspn(cmd, "\n")] = '\0';
 }
 
-if (read_bytes > 0 && line[read_bytes -1] == '\n')
-line[read_bytes - 1] = '\0';
+/**
+ * exec_cmd - function excute command
+ * @cmd: command 
+ * Return: void
+ */ 
+void exec_cmd(const char *cmd)
+{
+pid_t child_pid = fork();
 
-return (line);
+if (child_pid == -1)
+{
+perror("fork");
+exit(EXIT_FAILURE);
+} 
+else if (child_pid == 0)
+{
+execlp(cmd, cmd, (char *)NULL);
+perror("execlp");
+exit(EXIT_FAILURE);
 }
+else
+{
+wait(NULL);
+}
+}
+
 /**
  * main - function runs the program 
  * 
@@ -47,12 +77,12 @@ return (line);
 
 int main(void)
 {
-char *line;
-char *args[64];
-pid_t pid;
-int status;
-char *token;
-int i;
+//char *line;
+char cmd[100];
+//pid_t pid;
+//int status;
+//char *token;
+//int i;
 
 while (1)
 {
@@ -60,55 +90,13 @@ while (1)
 print_prompt();
 
 /*read line from the user*/
-line = get_line_from_user();
+get_line_from_user(cmd, sizeof(cmd));
 
-
-/*EOF (ctrl + D) or error*/
-if (line == NULL)
-break;
-
-i = 0;
-token = strtok(line, " \t\r\n");
-while (token != NULL && i < 63)
-{
-args[i] = token;
-token = strtok(line, " \t\r\n");
-i++;
-}
-
-args [i] = NULL;
-
-if (args[0] == NULL)
-{
-free(line);
-continue;
-}
-
-pid = fork();
-
-if (pid == -1)
-{
-perror("fork faild");
-free(line);
-exit(EXIT_FAILURE);
-}
-
-if (pid == 0)
-{
-if (execve(args[0], args, environ) == -1)
-{
-fprintf(stderr, "./hsh: No such file or directory\n");
-free(line);
-exit(1);
-}
-}
-else
-{
-wait(&status);
-}
-
-free(line);
+/*exc command*/
+exec_cmd(cmd);
 }
 
 return (0);
+
 }
+
