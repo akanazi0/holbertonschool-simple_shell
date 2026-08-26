@@ -51,7 +51,7 @@ return (NULL);
  * @cmd: command 
  * Return: void
  */ 
-void exec_cmd(char *cmd, char *prog_name)
+void exec_cmd(char *cmd, char *prog_name, int count)
 {
 pid_t child_pid;
 int status;
@@ -82,7 +82,7 @@ else if (child_pid == 0)
 {
 if (execve(args[0], args, environ) == -1)
 {
-fprintf(stderr, "%s: 1: %s  not found\n", prog_name, args[0]);
+fprintf(stderr, "%s: %d: %s:  not found\n", prog_name, count, args[0]);
 exit(127);
 }
 }
@@ -102,7 +102,9 @@ wait(&status);
 int main(int ac, char **av)
 {
 char *line = NULL; 
+int line_count = 0;
 (void)ac;
+
 
 while (1)
 {
@@ -122,7 +124,8 @@ break; /* Exit the while loop  */
 }
 
 /*exc command*/
-exec_cmd(line, av[0]);
+line_count++;
+exec_cmd(line, av[0], line_count);
 
 free(line); 
 }

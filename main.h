@@ -13,7 +13,7 @@ extern char **environ;
 
 void print(const char *s);
 void get_line_from_user(char *cmd, size_t size);
-void exec_cmd(char *cmd, char *prog_name);
+void exec_cmd(char *cmd, char *prog_name, int count);
 char *read_input(void);
 
 
