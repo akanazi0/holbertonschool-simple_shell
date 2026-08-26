@@ -13,10 +13,8 @@ extern char **environ;
 
 void print(const char *s);
 void get_line_from_user(char *cmd, size_t size);
-void exec_cmd(char *cmd);
+void exec_cmd(char *cmd, char *prog_name);
 char *read_input(void);
-
-
 
 
 #endif 

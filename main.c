@@ -17,7 +17,7 @@ write(STDOUT_FILENO, s, strlen(s));
  */
 void print_prompt(void)
 {
-print("#cisfun$ ");
+print("$ ");
 }
 
 /**
@@ -51,7 +51,7 @@ return (NULL);
  * @cmd: command 
  * Return: void
  */ 
-void exec_cmd(char *cmd)
+void exec_cmd(char *cmd, char *prog_name)
 {
 pid_t child_pid;
 int status;
@@ -82,7 +82,7 @@ else if (child_pid == 0)
 {
 if (execve(args[0], args, environ) == -1)
 {
-fprintf(stderr, "./shell: No such file or directory\n");
+fprintf(stderr, "%s: 1: %s  not found\n", prog_name, args[0]);
 exit(127);
 }
 }
@@ -99,13 +99,15 @@ wait(&status);
  */
 
 
-int main(void)
+int main(int ac, char **av)
 {
 char *line = NULL; 
+(void)ac;
 
 while (1)
 {
 /*display prompt*/
+if (isatty(STDIN_FILENO))
 print_prompt();
 
 /*read line from the user*/
@@ -120,7 +122,7 @@ break; /* Exit the while loop  */
 }
 
 /*exc command*/
-exec_cmd(line);
+exec_cmd(line, av[0]);
 
 free(line); 
 }
