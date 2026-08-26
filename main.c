@@ -1,6 +1,5 @@
 #include "main.h"
 
-
 /**
  * print - function print
  * @s: string to be printed
@@ -10,7 +9,6 @@ void print(const char *s)
 {
 write(STDOUT_FILENO, s, strlen(s));
 }
-
 
 /**
  * print_prompt - function prints $
@@ -27,44 +25,70 @@ print("#cisfun$ ");
  * 
  * Return: pointer, or NULL on EOF/error
  */
-void get_line_from_user(char *cmd, size_t size)
+char *read_input(void)
 {
-if (fgets(cmd, size, stdin) == NULL)
+char *line = NULL;
+size_t bufsize = 0;
+ssize_t characters_read;
+
+/* getline reads from stdin and returns number of bytes read */
+characters_read = getline(&line, &bufsize, stdin);
+
+/* Check for EOF (Ctrl+D) or read error */
+if (characters_read == -1)
 {
-if (feof(stdin)){
-print("\n");
-exit(EXIT_SUCCESS);
-} else {
-print("Error while reading input \n");
-exit(EXIT_FAILURE);
+free(line); 
+return (NULL);
 }
+
+	return (line);
 }
-cmd[strcspn(cmd, "\n")] = '\0';
-}
+
+
 
 /**
  * exec_cmd - function excute command
  * @cmd: command 
  * Return: void
  */ 
-void exec_cmd(const char *cmd)
+void exec_cmd(char *cmd)
 {
-pid_t child_pid = fork();
+pid_t child_pid;
+int status;
+char *args[64];
+char *token;
+int i = 0;
+
+token = strtok(cmd, " \t\r\n");
+while (token != NULL && i < 63)
+{
+args[i] = token;
+token = strtok(NULL, " \t\r\n");
+i++;
+}
+args[i] = NULL;
+
+if (args[0] == NULL)
+return;
+
+child_pid = fork();
 
 if (child_pid == -1)
 {
 perror("fork");
-exit(EXIT_FAILURE);
+return;
 } 
 else if (child_pid == 0)
 {
-execlp(cmd, cmd, (char *)NULL);
-perror("execlp");
-exit(EXIT_FAILURE);
+if (execve(args[0], args, environ) == -1)
+{
+fprintf(stderr, "./shell: No such file or directory\n");
+exit(127);
+}
 }
 else
 {
-wait(NULL);
+wait(&status);
 }
 }
 
@@ -77,7 +101,7 @@ wait(NULL);
 
 int main(void)
 {
-char cmd[100];
+char *line = NULL; 
 
 while (1)
 {
@@ -85,10 +109,20 @@ while (1)
 print_prompt();
 
 /*read line from the user*/
-get_line_from_user(cmd, sizeof(cmd));
+line = read_input();
+    
+/* Handle Ctrl+D (EOF) */
+if (line == NULL)
+{
+if (isatty(STDIN_FILENO))
+write(STDOUT_FILENO, "\n", 1);
+break; /* Exit the while loop  */
+}
 
 /*exc command*/
-exec_cmd(cmd);
+exec_cmd(line);
+
+free(line); 
 }
 
 return (0);
