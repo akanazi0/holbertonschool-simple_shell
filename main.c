@@ -77,12 +77,7 @@ wait(NULL);
 
 int main(void)
 {
-//char *line;
 char cmd[100];
-//pid_t pid;
-//int status;
-//char *token;
-//int i;
 
 while (1)
 {
