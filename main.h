@@ -21,6 +21,9 @@ char **tokenize_input(char *line);
 /* Execution */
 void exec_cmd(char **args, char *prog_name, int count);
 
+/* Path Resolution */
+char *_getenv(const char *name);
+
 /* String Utility Helpers */
 int _strlen(const char *s);
 int _strcmp(const char *s1, const char *s2);
