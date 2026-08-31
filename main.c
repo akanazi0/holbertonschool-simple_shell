@@ -7,7 +7,7 @@
  */
 void print(const char *s)
 {
-write(STDOUT_FILENO, s, strlen(s));
+	write(STDOUT_FILENO, s, strlen(s));
 }
 
 /**
@@ -17,7 +17,7 @@ write(STDOUT_FILENO, s, strlen(s));
  */
 void print_prompt(void)
 {
-print("$ ");
+	print("$ ");
 }
 
 /**
@@ -27,69 +27,64 @@ print("$ ");
  */
 char *read_input(void)
 {
-char *line = NULL;
-size_t bufsize = 0;
-ssize_t characters_read;
+	char *line = NULL;
+	size_t bufsize = 0;
+	ssize_t characters_read;
 
-/* getline reads from stdin and returns number of bytes read */
-characters_read = getline(&line, &bufsize, stdin);
-
-/* Check for EOF (Ctrl+D) or read error */
-if (characters_read == -1)
-{
-free(line); 
-return (NULL);
-}
+	characters_read = getline(&line, &bufsize, stdin);
+	if (characters_read == -1)
+	{
+		free(line);
+		return (NULL);
+	}
 
 	return (line);
 }
-
-
 
 /**
  * exec_cmd - function excute command
  * @cmd: command 
  * Return: void
- */ 
+ */
 void exec_cmd(char *cmd, char *prog_name, int count)
 {
-pid_t child_pid;
-int status;
-char *args[64];
-char *token;
-int i = 0;
+	pid_t child_pid;
+	int status;
+	char *args[64];
+	char *token;
+	int i = 0;
 
-token = strtok(cmd, " \t\r\n");
-while (token != NULL && i < 63)
-{
-args[i] = token;
-token = strtok(NULL, " \t\r\n");
-i++;
-}
-args[i] = NULL;
+	token = strtok(cmd, " \t\r\n");
+	while (token != NULL && i < 63)
+	{
+		args[i] = token;
+		token = strtok(NULL, " \t\r\n");
+		i++;
+	}
+	args[i] = NULL;
 
-if (args[0] == NULL)
-return;
+	if (args[0] == NULL)
+		return;
 
-child_pid = fork();
-
-if (child_pid == -1)
-{
-perror("fork");
-return;
-} 
-else if (child_pid == 0)
-{
-if (execve(args[0], args, environ) == -1)
-{
-fprintf(stderr, "%s: %d: %s:  not found\n", prog_name, count, args[0]);
-exit(127);
-}
-}
-else
-{
-wait(&status);
-}
+	child_pid = fork();
+	if (child_pid == -1)
+	{
+		perror("fork");
+		return;
+	}
+	else if (child_pid == 0)
+	{
+		if (execve(args[0], args, environ) == -1)
+		{
+			fprintf(stderr, "%s: %d: %s: not found\n",
+				prog_name, count, args[0]);
+			exit(127);
+		}
+	}
+	else
+	{
+		wait(&status);
+	}
 }
 
 /**
@@ -97,40 +92,31 @@ wait(&status);
  * 
  * Return: 0
  */
-
-
 int main(int ac, char **av)
 {
-char *line = NULL; 
-int line_count = 0;
-(void)ac;
+	char *line = NULL;
+	int line_count = 0;
 
+	(void)ac;
 
-while (1)
-{
-/*display prompt*/
-if (isatty(STDIN_FILENO))
-print_prompt();
+	while (1)
+	{
+		if (isatty(STDIN_FILENO))
+			print_prompt();
 
-/*read line from the user*/
-line = read_input();
-    
-/* Handle Ctrl+D (EOF) */
-if (line == NULL)
-{
-if (isatty(STDIN_FILENO))
-write(STDOUT_FILENO, "\n", 1);
-break; /* Exit the while loop  */
+		line = read_input();
+		if (line == NULL)
+		{
+			if (isatty(STDIN_FILENO))
+				write(STDOUT_FILENO, "\n", 1);
+			break;
+		}
+
+		line_count++;
+		exec_cmd(line, av[0], line_count);
+
+		free(line);
+	}
+
+	return (0);
 }
-
-/*exc command*/
-line_count++;
-exec_cmd(line, av[0], line_count);
-
-free(line); 
-}
-
-return (0);
-
-}
-
