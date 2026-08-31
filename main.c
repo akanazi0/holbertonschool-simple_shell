@@ -1,47 +1,6 @@
 #include "main.h"
 
 /**
- * print - function print
- * @s: string to be printed
- * Return: void
- */
-void print(const char *s)
-{
-	write(STDOUT_FILENO, s, strlen(s));
-}
-
-/**
- * print_prompt - function prints $
- * 
- * Return: void
- */
-void print_prompt(void)
-{
-	print("$ ");
-}
-
-/**
- * get_line_from_user - read line from stdin
- * 
- * Return: pointer, or NULL on EOF/error
- */
-char *read_input(void)
-{
-	char *line = NULL;
-	size_t bufsize = 0;
-	ssize_t characters_read;
-
-	characters_read = getline(&line, &bufsize, stdin);
-	if (characters_read == -1)
-	{
-		free(line);
-		return (NULL);
-	}
-
-	return (line);
-}
-
-/**
  * exec_cmd - function excute command
  * @cmd: command 
  * Return: void

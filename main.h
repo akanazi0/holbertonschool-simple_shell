@@ -8,13 +8,14 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-
 extern char **environ;
 
+/* Prompt and Input Functions */
 void print(const char *s);
-void get_line_from_user(char *cmd, size_t size);
-void exec_cmd(char *cmd, char *prog_name, int count);
+void print_prompt(void);
 char *read_input(void);
 
+/* Command Execution */
+void exec_cmd(char *cmd, char *prog_name, int count);
 
-#endif 
+#endif /* MAIN_H */
