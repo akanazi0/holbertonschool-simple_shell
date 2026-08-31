@@ -15,6 +15,9 @@ void print(const char *s);
 void print_prompt(void);
 char *read_input(void);
 
+/* Parsing */
+char **tokenize_input(char *line);
+
 /* Command Execution */
 void exec_cmd(char *cmd, char *prog_name, int count);
 
