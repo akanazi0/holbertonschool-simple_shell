@@ -21,4 +21,11 @@ char **tokenize_input(char *line);
 /* Execution */
 void exec_cmd(char **args, char *prog_name, int count);
 
+/* String Utility Helpers */
+int _strlen(const char *s);
+int _strcmp(const char *s1, const char *s2);
+char *_strdup(const char *str);
+char *_strcpy(char *dest, const char *src);
+char *_strcat(char *dest, const char *src);
+
 #endif /* MAIN_H */
