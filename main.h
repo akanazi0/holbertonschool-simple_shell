@@ -20,10 +20,10 @@ char *read_input(void);
 char **tokenize_input(char *line);
 
 /* Execution */
-void exec_cmd(char **args, char *prog_name, int count);
+int exec_cmd(char **args, char *prog_name, int count);
 
 /* Built-ins */
-int handle_builtin(char **args, char *line);
+int handle_builtin(char **args, char *line, int last_status);
 
 /* Path Resolution */
 char *_getenv(const char *name);

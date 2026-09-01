@@ -6,9 +6,9 @@
  * @prog_name: Name of the shell executable (for error reporting)
  * @count: Current line count for error reporting
  *
- * Return: void
+ * Return: Status code of the execution
  */
-void exec_cmd(char **args, char *prog_name, int count)
+int exec_cmd(char **args, char *prog_name, int count)
 {
 	char *actual_cmd;
 	pid_t child_pid;
@@ -19,7 +19,7 @@ void exec_cmd(char **args, char *prog_name, int count)
 	{
 		fprintf(stderr, "%s: %d: %s: not found\n",
 			prog_name, count, args[0]);
-		return;
+		return (127);
 	}
 
 	child_pid = fork();
@@ -27,7 +27,7 @@ void exec_cmd(char **args, char *prog_name, int count)
 	{
 		perror("fork");
 		free(actual_cmd);
-		return;
+		return (1);
 	}
 	else if (child_pid == 0)
 	{
@@ -41,7 +41,10 @@ void exec_cmd(char **args, char *prog_name, int count)
 	else
 	{
 		wait(&status);
+		free(actual_cmd);
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
 	}
 
-	free(actual_cmd);
+	return (0);
 }

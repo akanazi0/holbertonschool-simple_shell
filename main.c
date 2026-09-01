@@ -5,13 +5,14 @@
  * @ac: Argument count (unused)
  * @av: Argument vector (contains program name)
  *
- * Return: Always 0 (Success)
+ * Return: Status of the last executed command
  */
 int main(int ac, char **av)
 {
 	char *line = NULL;
 	char **args = NULL;
 	int line_count = 0;
+	int last_status = 0;
 
 	(void)ac;
 
@@ -32,13 +33,15 @@ int main(int ac, char **av)
 		args = tokenize_input(line);
 		if (args != NULL && args[0] != NULL)
 		{
-			if (!handle_builtin(args, line))
-				exec_cmd(args, av[0], line_count);
+			if (!handle_builtin(args, line, last_status))
+				last_status = exec_cmd(args, av[0], line_count);
+			else
+				last_status = 0;
 		}
 
 		free(args);
 		free(line);
 	}
 
-	return (0);
+	return (last_status);
 }

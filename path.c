@@ -9,13 +9,12 @@
 char *_getenv(const char *name)
 {
 	int i = 0;
-	int len = 0;
+	int len;
 
 	if (!name || !environ)
 		return (NULL);
 
 	len = _strlen(name);
-
 	while (environ[i])
 	{
 		if (strncmp(environ[i], name, len) == 0 && environ[i][len] == '=')
@@ -38,7 +37,7 @@ char *find_path(char *cmd)
 	struct stat st;
 	int full_len;
 
-	if (!cmd)
+	if (!cmd || *cmd == '\0')
 		return (NULL);
 
 	if (cmd[0] == '/' || cmd[0] == '.')
