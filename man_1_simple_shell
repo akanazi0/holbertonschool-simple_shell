@@ -1,0 +1,45 @@
+.TH HSH 1 "September 2026" "0.1" "Simple Shell Manual"
+.SH NAME
+hsh \- simple UNIX command line interpreter
+.SH SYNOPSIS
+.B ./hsh
+.SH DESCRIPTION
+.B hsh
+is a minimal UNIX command language interpreter that reads commands from standard input or from a file and executes them.
+.PP
+The shell operates in both interactive and non-interactive modes.
+
+.SH INVOCATION
+To launch the shell interactively:
+.RS
+.B $ ./hsh
+.br
+$
+.RE
+
+To run commands non-interactively via pipe:
+.RS
+.B $ echo "ls -l" | ./hsh
+.RE
+
+.SH BUILT-IN COMMANDS
+.TP
+.B exit [status]
+Terminates the shell process. If a numeric status is provided, the shell exits with that integer code; otherwise, it exits with the status of the last executed command.
+.TP
+.B env
+Prints all current environment variables formatted as key=value pairs.
+
+.SH PATH RESOLUTION
+If an executable name does not contain a slash (/),
+.B hsh
+searches through the directories listed in the
+.B PATH
+environment variable. If the command is not found, an error is printed to stderr and the exit code is set to 127 without calling fork.
+
+.SH RETURN VALUE
+Returns 0 on clean exit, 127 when a command is not found, or the exit status of the most recently executed child process.
+
+.SH AUTHORS
+Abdulelah Alanazi
+Asma Alsayyari
