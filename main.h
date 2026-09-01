@@ -22,6 +22,9 @@ char **tokenize_input(char *line);
 /* Execution */
 void exec_cmd(char **args, char *prog_name, int count);
 
+/* Built-ins */
+int handle_builtin(char **args, char *line);
+
 /* Path Resolution */
 char *_getenv(const char *name);
 char *find_path(char *cmd);

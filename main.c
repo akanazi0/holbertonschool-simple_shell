@@ -31,7 +31,10 @@ int main(int ac, char **av)
 		line_count++;
 		args = tokenize_input(line);
 		if (args != NULL && args[0] != NULL)
-			exec_cmd(args, av[0], line_count);
+		{
+			if (!handle_builtin(args, line))
+				exec_cmd(args, av[0], line_count);
+		}
 
 		free(args);
 		free(line);
