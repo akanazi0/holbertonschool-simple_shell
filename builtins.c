@@ -1,6 +1,28 @@
 #include "main.h"
 
 /**
+ * print_env - Prints the current environment variables to stdout
+ *
+ * Return: Always 1 (handled)
+ */
+static int print_env(void)
+{
+	int i = 0;
+
+	if (!environ)
+		return (1);
+
+	while (environ[i])
+	{
+		print(environ[i]);
+		print("\n");
+		i++;
+	}
+
+	return (1);
+}
+
+/**
  * handle_builtin - Checks and executes shell built-in commands
  * @args: Array of argument strings
  * @line: Input buffer to free on exit
@@ -14,7 +36,6 @@ int handle_builtin(char **args, char *line,
 		   int last_status, char *prog, int count)
 {
 	int exit_val = 0;
-	int i = 0;
 
 	if (!args || !args[0])
 		return (0);
@@ -40,15 +61,7 @@ int handle_builtin(char **args, char *line,
 	}
 
 	if (_strcmp(args[0], "env") == 0)
-	{
-		while (environ && environ[i])
-		{
-			print(environ[i]);
-			print("\n");
-			i++;
-		}
-		return (1);
-	}
+		return (print_env());
 
 	return (0);
 }
