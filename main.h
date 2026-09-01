@@ -23,17 +23,19 @@ char **tokenize_input(char *line);
 int exec_cmd(char **args, char *prog_name, int count);
 
 /* Built-ins */
-int handle_builtin(char **args, char *line, int last_status);
+int handle_builtin(char **args, char *line,
+		   int last_status, char *prog, int count);
 
 /* Path Resolution */
 char *_getenv(const char *name);
 char *find_path(char *cmd);
 
-/* String Utility Helpers */
+/* String & Number Helpers */
 int _strlen(const char *s);
 int _strcmp(const char *s1, const char *s2);
 char *_strdup(const char *str);
 char *_strcpy(char *dest, const char *src);
 char *_strcat(char *dest, const char *src);
+int _atoi(const char *s);
 
 #endif /* MAIN_H */

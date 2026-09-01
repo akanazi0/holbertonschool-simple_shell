@@ -13,6 +13,7 @@ int main(int ac, char **av)
 	char **args = NULL;
 	int line_count = 0;
 	int last_status = 0;
+	int builtin_ret = 0;
 
 	(void)ac;
 
@@ -33,8 +34,11 @@ int main(int ac, char **av)
 		args = tokenize_input(line);
 		if (args != NULL && args[0] != NULL)
 		{
-			if (!handle_builtin(args, line, last_status))
+			builtin_ret = handle_builtin(args, line, last_status, av[0], line_count);
+			if (builtin_ret == 0)
 				last_status = exec_cmd(args, av[0], line_count);
+			else if (builtin_ret == 2)
+				last_status = 2;
 			else
 				last_status = 0;
 		}

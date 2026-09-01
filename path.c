@@ -26,6 +26,41 @@ char *_getenv(const char *name)
 }
 
 /**
+ * search_dirs - Iterates through PATH directories to find binary
+ * @path_dup: Duplicated PATH string to tokenize
+ * @cmd: The command name to locate
+ *
+ * Return: Full path to binary if found, or NULL if not found
+ */
+static char *search_dirs(char *path_dup, char *cmd)
+{
+	char *dir, *full_path;
+	struct stat st;
+	int full_len;
+
+	dir = strtok(path_dup, ":");
+	while (dir != NULL)
+	{
+		full_len = _strlen(dir) + _strlen(cmd) + 2;
+		full_path = malloc(sizeof(char) * full_len);
+		if (!full_path)
+			return (NULL);
+
+		_strcpy(full_path, dir);
+		_strcat(full_path, "/");
+		_strcat(full_path, cmd);
+
+		if (stat(full_path, &st) == 0)
+			return (full_path);
+
+		free(full_path);
+		dir = strtok(NULL, ":");
+	}
+
+	return (NULL);
+}
+
+/**
  * find_path - Searches PATH environment variable to locate binary
  * @cmd: The command name to locate
  *
@@ -33,9 +68,8 @@ char *_getenv(const char *name)
  */
 char *find_path(char *cmd)
 {
-	char *path_env, *path_dup, *dir, *full_path;
+	char *path_env, *path_dup, *res;
 	struct stat st;
-	int full_len;
 
 	if (!cmd || *cmd == '\0')
 		return (NULL);
@@ -55,30 +89,8 @@ char *find_path(char *cmd)
 	if (!path_dup)
 		return (NULL);
 
-	dir = strtok(path_dup, ":");
-	while (dir != NULL)
-	{
-		full_len = _strlen(dir) + _strlen(cmd) + 2;
-		full_path = malloc(sizeof(char) * full_len);
-		if (!full_path)
-		{
-			free(path_dup);
-			return (NULL);
-		}
-
-		_strcpy(full_path, dir);
-		_strcat(full_path, "/");
-		_strcat(full_path, cmd);
-
-		if (stat(full_path, &st) == 0)
-		{
-			free(path_dup);
-			return (full_path);
-		}
-		free(full_path);
-		dir = strtok(NULL, ":");
-	}
-
+	res = search_dirs(path_dup, cmd);
 	free(path_dup);
-	return (NULL);
+
+	return (res);
 }

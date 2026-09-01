@@ -87,31 +87,3 @@ char *_strcpy(char *dest, const char *src)
 
 	return (dest);
 }
-
-/**
- * _strcat - Concatenates two strings
- * @dest: Destination buffer
- * @src: Source string
- *
- * Return: Pointer to dest
- */
-char *_strcat(char *dest, const char *src)
-{
-	int dest_len = 0;
-	int i = 0;
-
-	if (!dest || !src)
-		return (dest);
-
-	while (dest[dest_len])
-		dest_len++;
-
-	while (src[i])
-	{
-		dest[dest_len + i] = src[i];
-		i++;
-	}
-	dest[dest_len + i] = '\0';
-
-	return (dest);
-}
