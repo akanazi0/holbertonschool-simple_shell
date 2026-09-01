@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 
 extern char **environ;
 
@@ -23,6 +24,7 @@ void exec_cmd(char **args, char *prog_name, int count);
 
 /* Path Resolution */
 char *_getenv(const char *name);
+char *find_path(char *cmd);
 
 /* String Utility Helpers */
 int _strlen(const char *s);
