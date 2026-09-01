@@ -13,15 +13,22 @@ char **tokenize_input(char *line)
 	char *token;
 	int i = 0;
 
+	if (!line)
+		return (NULL);
+
 	args = malloc(sizeof(char *) * 64);
 	if (!args)
 		return (NULL);
 
-	token = strtok(line, " \t\r\n");
+	token = strtok(line, " \t\r\n\a");
 	while (token != NULL && i < 63)
 	{
+		/* Stop tokenizing if a comment is encountered */
+		if (token[0] == '#')
+			break;
+
 		args[i] = token;
-		token = strtok(NULL, " \t\r\n");
+		token = strtok(NULL, " \t\r\n\a");
 		i++;
 	}
 	args[i] = NULL;

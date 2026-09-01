@@ -1,18 +1,19 @@
 #include "main.h"
 
 /**
- * print - Writes a string to standard output
- * @s: The string to be printed
+ * print - Prints a string to stdout
+ * @s: String to print
  *
  * Return: void
  */
 void print(const char *s)
 {
-	write(STDOUT_FILENO, s, strlen(s));
+	if (s)
+		write(STDOUT_FILENO, s, _strlen(s));
 }
 
 /**
- * print_prompt - Prints the shell prompt symbol
+ * print_prompt - Displays the shell prompt in interactive mode
  *
  * Return: void
  */
@@ -29,11 +30,11 @@ void print_prompt(void)
 char *read_input(void)
 {
 	char *line = NULL;
-	size_t bufsize = 0;
-	ssize_t characters_read;
+	size_t len = 0;
+	ssize_t nread;
 
-	characters_read = getline(&line, &bufsize, stdin);
-	if (characters_read == -1)
+	nread = getline(&line, &len, stdin);
+	if (nread == -1)
 	{
 		free(line);
 		return (NULL);
